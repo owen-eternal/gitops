@@ -46,39 +46,45 @@ name: 'Terraform'
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
+    # environment: production
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: ${{ secrets.AW_OIDC_ROLE}}
+        role-session-name: FederatedOIDC-Role
+        aws-region: ${{ env.AWS_REGION }}
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: cd ./infra && terraform init 
+      run: cd ./infra && terraform init \ 
+          -backend-config="bucket=${BACKEND_BUCKET_NAME}" \
+          -backend-config="key=${BACKEND_KEY}"
 
     - name: List Terraform workspaces
       run: terraform workspace list
 
-    # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt -check
