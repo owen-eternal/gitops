@@ -82,7 +82,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1
     
     - name: list working dir
-      uses: ls 
+      run: ls 
 
     - name: Terraform Init
       run: terraform -chdir=./infra init -backend-config="bucket=${BACKEND_BUCKET_NAME}" -backend-config="key=${BACKEND_KEY}" -backend-config="region=${AWS_ROLE}"
