@@ -85,7 +85,10 @@ jobs:
       run: ls 
 
     - name: Terraform Init
-      run: terraform -chdir=./infra init -backend-config="bucket=$BACKEND_BUCKET_NAME" -backend-config="key=$BACKEND_KEY" -backend-config="region=$AWS_REGION"
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.BACKEND_BUCKET_NAME}}
+        AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
+      run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
 
     - name: List Terraform workspaces
       run: terraform workspace list
