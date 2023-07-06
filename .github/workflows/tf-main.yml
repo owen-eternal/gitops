@@ -103,12 +103,12 @@ jobs:
       run: terraform validate -no-color
     
     - uses: actions/github-script@v6
-      env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      id: my-script
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        result-encoding: string
+        retries: 3
         script: |
-          github.rest.issues.createComment({
+          github.rest.issues.get({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
