@@ -90,4 +90,4 @@ jobs:
       run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
 
     - name: list the available workspaces
-      run: terraform workspace list
+      run: terraform -chdir=./infra workspace list
