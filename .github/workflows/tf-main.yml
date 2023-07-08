@@ -63,31 +63,37 @@ jobs:
     name: 'Terraform'
     runs-on: ubuntu-latest
     # environment: production
-
     defaults:
       run:
         shell: bash
+    strategy:
+      matrix:
+        environment:
+          - staging
+          - production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Iterate through the environments
+        run: echo "environments ${{ matrix.environment }}"
+    # - name: Checkout
+    #   uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1.7.0
-      with:
-        role-to-assume: ${{ secrets.AW_OIDC_ROLE}}
-        role-session-name: FederatedOIDC-Role
-        aws-region: ${{ env.AWS_REGION }}
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v1.7.0
+    #   with:
+    #     role-to-assume: ${{ secrets.AW_OIDC_ROLE}}
+    #     role-session-name: FederatedOIDC-Role
+    #     aws-region: ${{ env.AWS_REGION }}
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    # - name: Setup Terraform
+    #   uses: hashicorp/setup-terraform@v1
       
-    - name: Terraform Init
-      id: init
-      env:
-        AWS_BUCKET_NAME: ${{ secrets.BACKEND_BUCKET_NAME}}
-        AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
-      run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
+    # - name: Terraform Init
+    #   id: init
+    #   env:
+    #     AWS_BUCKET_NAME: ${{ secrets.BACKEND_BUCKET_NAME}}
+    #     AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
+    #   run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
 
-    - name: list the available workspaces
-      run: terraform -chdir=./infra workspace list
+    # - name: list the available workspaces
+    #   run: terraform -chdir=./infra workspace list
