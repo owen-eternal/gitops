@@ -60,7 +60,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform -chdir=./infra plan -input=false
+      run: terraform -chdir=./infra plan
       continue-on-error: true
     
     - uses: actions/github-script@v6
