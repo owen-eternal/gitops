@@ -65,18 +65,16 @@ jobs:
     
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
-      env:
-        VALIDATE: "terraform\n${{ steps.validate.outputs.stdout }}"
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
         script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          const output = `#### Terraform Workspace 📖\`${{ matrix.environment }}\`
+          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
           #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
     
           \`\`\`\n
-          ${process.env.VALIDATE}
+          terraform\n${{ steps.validate.outputs.stdout }}
           \`\`\`
     
           </details>
@@ -85,7 +83,7 @@ jobs:
           <details><summary>Show Plan</summary>
     
           \`\`\`\n
-          ${process.env.PLAN}
+          terraform\n${{ steps.plan.outputs.stdout }}
           \`\`\`
     
           </details>
