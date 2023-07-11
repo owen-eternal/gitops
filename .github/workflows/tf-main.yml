@@ -39,7 +39,7 @@ jobs:
     
     - name: Terraform fmt
       id: fmt
-      run: terraform fmt -check
+      run: terraform -chdir=./infra fmt -check
       continue-on-error: true
       
     - name: Terraform Init
