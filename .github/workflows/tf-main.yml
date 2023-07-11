@@ -55,12 +55,12 @@ jobs:
 
     - name: Terraform Validate
       id: validate
-      run: terraform -chdir=./infra validate -no-color -input=false
+      run: terraform -chdir=./infra validate -no-color 
       continue-on-error: true
 
     - name: Terraform Plan
       id: plan
-      run: terraform -chdir=./infra plan -no-color
+      run: terraform -chdir=./infra plan -input=false
       continue-on-error: true
     
     - uses: actions/github-script@v6
