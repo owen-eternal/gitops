@@ -49,53 +49,50 @@ jobs:
         AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
       run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
 
-    - name: List available workspaces
-      run: terraform workspace list
-
     - name: Select workspace
       id: workspace
-      run: terraform workspace select ${{ matrix.environment }}
+      run: terraform -chdir=./infra workspace select ${{ matrix.environment }}
 
-    # - name: Terraform Validate
-    #   id: validate
-    #   run: terraform validate -no-color
+    - name: Terraform Validate
+      id: validate
+      run: terraform -chdir=./infra validate -no-color
 
-    # - name: Terraform Plan
-    #   id: plan
-    #   run: terraform plan -no-color
-    #   continue-on-error: true
+    - name: Terraform Plan
+      id: plan
+      run: terraform -chdir=./infra plan -no-color
+      continue-on-error: true
     
-    # - uses: actions/github-script@v6
-    #   if: github.event_name == 'pull_request'
-    #   with:
-    #     script: |
-    #       const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-    #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-    #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-    #       #### Terraform Workspace 🤖\`${{ steps.workspace.outcome }}\`
-    #       <details><summary>Validation Output</summary>
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          #### Terraform Workspace 🤖\`${{ steps.workspace.outcome }}\`
+          <details><summary>Validation Output</summary>
     
-    #       \`\`\`\n
-    #       ${{ steps.validate.outputs.stdout }}
-    #       \`\`\`
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
     
-    #       </details>
+          </details>
     
-    #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
     
-    #       <details><summary>Show Plan</summary>
+          <details><summary>Show Plan</summary>
     
-    #       \`\`\`\n
-    #       ${process.env.PLAN}
-    #       \`\`\`
+          \`\`\`\n
+          ${process.env.PLAN}
+          \`\`\`
     
-    #       </details>
+          </details>
     
-    #       *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
     
-    #       github.rest.issues.createComment({
-    #         issue_number: context.issue.number,
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         body: output
-    #       })
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
