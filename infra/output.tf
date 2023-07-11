@@ -1,3 +1,3 @@
 output "output_workspace" {
-  value = terraform.workspace
+  value= terraform.workspace
 }
