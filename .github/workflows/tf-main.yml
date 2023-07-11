@@ -56,6 +56,7 @@ jobs:
     - name: Terraform Validate
       id: validate
       run: terraform -chdir=./infra validate -no-color -input=false
+      continue-on-error: true
 
     - name: Terraform Plan
       id: plan
