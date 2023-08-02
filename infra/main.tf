@@ -1,7 +1,7 @@
 module "tf-aws-network" {
   source          = "git@github.com:owen-eternal/tf-aws-network-mod.git"
   vpc_cdir        = var.vpc_cdir
-  project_name    = var.project_name
+  project_name    = hyroku
   environment     = terraform.workspace
   web_server_port = null
   database        = var.database
