@@ -3,9 +3,9 @@ module "tf-aws-network" {
   vpc_cdir        = var.vpc_cdir
   project_name    = var.project_name
   environment     = terraform.workspace
-  web_server_port = var.web_server_port
+  web_server_port = null
   database        = var.database
-  db_server_port  = var.db_server_port
+  db_server_port  = null
   subnet_cdir     = var.subnet_cdir
   ipaddr          = var.ipaddr
 }
