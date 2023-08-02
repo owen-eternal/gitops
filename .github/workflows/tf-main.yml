@@ -64,7 +64,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      env:
+      #env:
         # TF_VAR_VPC_CDIR: ${{ secrets.TF_VAR_VPC_CDIR}}
         # TF_VAR_PROJECT_NAME: ${{ secrets.TF_VAR_PROJECT_NAME }}
         # TF_VAR_SUBNET_CDIR: ${{ secrets.TF_VAR_SUBNET_CDIR }}
