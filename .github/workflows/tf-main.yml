@@ -32,9 +32,11 @@ jobs:
       with:
         role-to-assume: ${{ secrets.GH_OIDC_ROLE_ARN }}
         aws-region: ${{ env.AWS_REGION }}
-
-    - name: Authenticate git
-      run: git config --global url."https://oauth2:${{ secrets.TF_TOKEN }}@github.com".insteadOf https://github.com
+    
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.TF_MODULE_PRIVATE_KEY }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -51,61 +53,61 @@ jobs:
         AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
       run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
 
-    - name: Select workspace
-      id: workspace
-      run: terraform -chdir=./infra workspace select ${{ matrix.environment }}
+    # - name: Select workspace
+    #   id: workspace
+    #   run: terraform -chdir=./infra workspace select ${{ matrix.environment }}
 
-    - name: Terraform Validate
-      id: validate
-      run: terraform -chdir=./infra validate -no-color 
-      continue-on-error: true
+    # - name: Terraform Validate
+    #   id: validate
+    #   run: terraform -chdir=./infra validate -no-color 
+    #   continue-on-error: true
 
-    - name: Terraform Plan
-      id: plan
-      env:
-        TF_VAR_VPC_CDIR: ${{ secrets.TF_VAR_VPC_CDIR}}
-        TF_VAR_PROJECT_NAME: ${{ secrets.TF_VAR_PROJECT_NAME }}
-        TF_VAR_SUBNET_CDIR: ${{ secrets.TF_VAR_SUBNET_CDIR }}
-        TF_VAR_WEB_SERVER_PORT: ${{ secrets.TF_VAR_WEB_SERVER_PORT }}
-        TF_VAR_TF_VAR_DATABASE: ${{ secrets.TF_VAR_DATABASE }}
-        TF_VAR_DB_SERVER_PORT: ${{ secrets.TF_VAR_DB_SERVER_PORT}}
-        TF_VAR_IPADDR: ${{ secrets.TF_VAR_IPADDR }}
-      run: terraform -chdir=./infra plan
-      continue-on-error: true
+    # - name: Terraform Plan
+    #   id: plan
+    #   env:
+    #     TF_VAR_VPC_CDIR: ${{ secrets.TF_VAR_VPC_CDIR}}
+    #     TF_VAR_PROJECT_NAME: ${{ secrets.TF_VAR_PROJECT_NAME }}
+    #     TF_VAR_SUBNET_CDIR: ${{ secrets.TF_VAR_SUBNET_CDIR }}
+    #     TF_VAR_WEB_SERVER_PORT: ${{ secrets.TF_VAR_WEB_SERVER_PORT }}
+    #     TF_VAR_TF_VAR_DATABASE: ${{ secrets.TF_VAR_DATABASE }}
+    #     TF_VAR_DB_SERVER_PORT: ${{ secrets.TF_VAR_DB_SERVER_PORT}}
+    #     TF_VAR_IPADDR: ${{ secrets.TF_VAR_IPADDR }}
+    #   run: terraform -chdir=./infra plan
+    #   continue-on-error: true
     
-    - uses: actions/github-script@v6
-      if: github.event_name == 'pull_request'
-      with:
-        script: |
-          const output = `#### Terraform Workspace 📖\`${{ matrix.environment }}\`
-          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-          <details><summary>Validation Output</summary>
+    # - uses: actions/github-script@v6
+    #   if: github.event_name == 'pull_request'
+    #   with:
+    #     script: |
+    #       const output = `#### Terraform Workspace 📖\`${{ matrix.environment }}\`
+    #       #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+    #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+    #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+    #       <details><summary>Validation Output</summary>
     
-          \`\`\`\n
-          terraform\n${{ steps.validate.outputs.stdout }}
-          \`\`\`
+    #       \`\`\`\n
+    #       terraform\n${{ steps.validate.outputs.stdout }}
+    #       \`\`\`
     
-          </details>
+    #       </details>
     
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-          <details><summary>Show Plan</summary>
+    #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+    #       <details><summary>Show Plan</summary>
     
-          \`\`\`\n
-          terraform\n${{ steps.plan.outputs.stdout }}
-          \`\`\`
+    #       \`\`\`\n
+    #       terraform\n${{ steps.plan.outputs.stdout }}
+    #       \`\`\`
     
-          </details>
+    #       </details>
     
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+    #       *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
     
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+    #       github.rest.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: output
+    #       })
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
