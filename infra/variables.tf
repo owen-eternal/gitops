@@ -1,8 +1,6 @@
 ####### VPC-Tier Module Variables ########
 variable "database" {}
 variable "ipaddr" {}
-variable "workspace" {}
-
 variable "network" {
     type = map(any)
     default = {
