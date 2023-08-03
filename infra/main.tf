@@ -16,9 +16,9 @@ module "tf-aws-network" {
 
 module "tf-aws-web-tier" {
   source              = "git@github.com:owen-eternal/tf-aws-app-tier-mod.git"
-  app_ami             = var.ami
-  app_instance_type   = var.instance_type
-  ssh_key_pair        = var.key_pair
+  app_ami             = var.app_ami
+  app_instance_type   = var.app_instance_type
+  ssh_key_pair        = var.ssh_key_pair
   prefix              = module.tf-aws-network.tag_name
   lb_security_group   = module.tf-aws-network.lb_security_group_id
   web_port            = module.tf-aws-network.application_port
