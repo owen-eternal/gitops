@@ -70,40 +70,40 @@ jobs:
       run: terraform -chdir=./infra plan
       continue-on-error: true
     
-    # - uses: actions/github-script@v6
-    #   if: github.event_name == 'pull_request'
-    #   with:
-    #     script: |
-    #       const output = `#### Terraform Workspace 📖\`${{ matrix.environment }}\`
-    #       #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-    #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-    #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-    #       <details><summary>Validation Output</summary>
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const output = `#### Terraform Workspace 📖\`${{ matrix.environment }}\`
+          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
     
-    #       \`\`\`\n
-    #       terraform\n${{ steps.validate.outputs.stdout }}
-    #       \`\`\`
+          \`\`\`\n
+          terraform\n${{ steps.validate.outputs.stdout }}
+          \`\`\`
     
-    #       </details>
+          </details>
     
-    #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-    #       <details><summary>Show Plan</summary>
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          <details><summary>Show Plan</summary>
     
-    #       \`\`\`\n
-    #       terraform\n${{ steps.plan.outputs.stdout }}
-    #       \`\`\`
+          \`\`\`\n
+          terraform\n${{ steps.plan.outputs.stdout }}
+          \`\`\`
     
-    #       </details>
+          </details>
     
-    #       *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
     
-    #       github.rest.issues.createComment({
-    #         issue_number: context.issue.number,
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         body: output
-    #       })
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
 
-    # - name: Terraform Apply
-    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    #   run: terraform -chdir=./infra destroy -auto-approve -input=false
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform -chdir=./infra destroy -auto-approve -input=false
