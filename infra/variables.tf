@@ -6,6 +6,10 @@ variable "workspace" {}
 variable "network" {
     type = map(any)
     default = {
+        "default" = {
+            "vid" = null
+            "subnets" = null
+        } 
         "staging" = {
             "vid" = "10.0.0.0/16"
             "subnets" = {
