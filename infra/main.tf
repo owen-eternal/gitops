@@ -1,11 +1,11 @@
 module "tf-aws-network" {
   source          = "git@github.com:owen-eternal/tf-aws-network-mod.git"
-  vpc_cdir        = var.network[terraform.workspace].vid
-  project_name    = "hyroku"
-  environment     = terraform.workspace
-  web_server_port = null
-  database        = var.database
   db_server_port  = null
-  subnet_cdir     = var.network[terraform.workspace].subnets
+  database        = var.database
+  environment     = terraform.workspace
   ipaddr          = var.ipaddr
+  project_name    = "hyroku"
+  subnet_cdir     = var.network[terraform.workspace].subnets
+  vpc_cdir        = var.network[terraform.workspace].vid
+  web_server_port = null
 }
