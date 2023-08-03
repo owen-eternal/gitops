@@ -71,7 +71,6 @@ jobs:
         TF_VAR_ipaddr: ${{ vars.TF_VAR_IPADDR }}
         TF_VAR_web_cidrs: ${{ fromJson(vars.TF_VAR_WEB_CIDRS) }}
         TF_VAR_db_cidrs: ${{ fromJson(vars.TF_VAR_DB_CIDRS) }}
-
       run: terraform -chdir=./infra plan
       continue-on-error: true
     
