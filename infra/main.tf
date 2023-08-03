@@ -6,6 +6,6 @@ module "tf-aws-network" {
   web_server_port = null
   database        = var.database
   db_server_port  = null
-  subnet_cdir     = var.subnet_cdir
+  subnet_cdir     = tomap(var.subnet_cdir)
   ipaddr          = var.ipaddr
 }
