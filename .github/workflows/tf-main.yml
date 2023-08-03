@@ -52,7 +52,7 @@ jobs:
       env:
         AWS_BUCKET_NAME: ${{ secrets.BACKEND_BUCKET_NAME}}
         AWS_BUCKET_KEY: ${{ secrets.BACKEND_KEY}}
-      run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}" -var="TF_WORKSPACE=${{ matrix.workflow }}"
+      run: terraform -chdir=./infra init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY}" -backend-config="region=${AWS_REGION}" -var="workspace=${{ matrix.workflow }}"
 
     # - name: Select workspace
     #   id: workspace${{ matrix.workflow }}
