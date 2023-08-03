@@ -2,7 +2,7 @@
 variable "database" {}
 variable "ipaddr" {}
 variable "network" {
-    type = map()
+    type = map(any)
     default = {
         "staging" = {
            "vid" = "10.0.0.0/16"
