@@ -1,7 +1,10 @@
 ####### VPC-Tier Module Variables ########
 variable "database" {}
+
 variable "ipaddr" {}
+
 variable "network" {
+    description = "Object with a list of CIDR block ranges for the network."
     type = map(any)
     default = {
         "staging" = {
