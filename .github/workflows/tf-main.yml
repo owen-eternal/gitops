@@ -8,6 +8,8 @@ on:
 
 env:
   AWS_REGION: eu-west-1
+  TF_VAR_database: ${{ vars.TF_VAR_DATABASE }}
+  TF_VAR_ipaddr: ${{ vars.TF_VAR_IPADDR }}
 
 permissions:
   id-token: write
@@ -64,9 +66,6 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      env:
-        TF_VAR_database: ${{ vars.TF_VAR_DATABASE }}
-        TF_VAR_ipaddr: ${{ vars.TF_VAR_IPADDR }}
       run: terraform -chdir=./infra plan
       continue-on-error: true
     
