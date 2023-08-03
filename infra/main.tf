@@ -7,8 +7,8 @@ module "tf-aws-network" {
   database        = var.database
   db_server_port  = null
   subnet_cdir     = {
-    web = var.web_cidrs 
-    db  = var.db_cidrs
+    web = tolist(var.web_cidrs) 
+    db  = tolist(var.db_cidrs)
   }
   ipaddr          = var.ipaddr
 }
