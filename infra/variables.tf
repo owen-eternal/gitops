@@ -1,7 +1,9 @@
 ####### VPC-Tier Module Variables ########
 variable "database" {}
-
 variable "ipaddr" {}
+variable "app_ami" {}
+variable "app_instance_type" {}
+variable "ssh_key_pair" {}
 
 variable "network" {
   description = "Object with a list of CIDR block ranges for the network."
